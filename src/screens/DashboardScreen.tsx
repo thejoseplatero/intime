@@ -33,12 +33,19 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
         return;
       }
       
-      const sorted = data.sort((a, b) => {
+      // Separate birthday milestone from others
+      const birthdayMilestone = data.find(m => m.id === 'birthday-milestone');
+      const otherMilestones = data.filter(m => m.id !== 'birthday-milestone');
+      
+      // Sort other milestones by days remaining
+      const sortedOthers = otherMilestones.sort((a, b) => {
         const daysA = calculateDaysLeft(a.date);
         const daysB = calculateDaysLeft(b.date);
         return daysA - daysB;
       });
-      setMilestones(sorted);
+      
+      // Birthday first, then others
+      setMilestones(birthdayMilestone ? [birthdayMilestone, ...sortedOthers] : sortedOthers);
     } catch (error) {
       console.error('Error in loadMilestones:', error);
       setMilestones([]);
@@ -85,11 +92,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>InTime</Text>
+        <Text style={styles.headerTitle}>Your Lifeline</Text>
         <Text style={styles.headerSubtitle}>
-          {milestones.length === 0
-            ? 'No milestones yet'
-            : `${milestones.length} milestone${milestones.length > 1 ? 's' : ''}`}
+          Every moment is precious. Use it wisely.
         </Text>
       </View>
 

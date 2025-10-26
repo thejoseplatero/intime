@@ -14,6 +14,7 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
   onEdit,
   onDelete,
 }) => {
+  const isBirthday = milestone.id === 'birthday-milestone';
   const [expanded, setExpanded] = useState(false);
 
   const handleDelete = () => {
@@ -28,15 +29,20 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
   };
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, isBirthday && styles.birthdayCard]}>
       <TouchableOpacity
         onPress={() => setExpanded(!expanded)}
         activeOpacity={0.9}
       >
+        {isBirthday && (
+          <View style={styles.birthdayHeader}>
+            <Text style={styles.birthdayLabel}>YOUR LIFELINE</Text>
+          </View>
+        )}
         <View style={styles.header}>
-          <Text style={styles.emoji}>{milestone.emoji}</Text>
-          <Text style={styles.title}>{milestone.title}</Text>
-          <Text style={styles.chevron}>{expanded ? '▲' : '▼'}</Text>
+          <Text style={[styles.emoji, isBirthday && styles.birthdayEmoji]}>{milestone.emoji}</Text>
+          <Text style={[styles.title, isBirthday && styles.birthdayTitle]}>{milestone.title}</Text>
+          {!isBirthday && <Text style={styles.chevron}>{expanded ? '▲' : '▼'}</Text>}
         </View>
 
         <View style={styles.countdownPreview}>
@@ -83,6 +89,35 @@ const styles = StyleSheet.create({
     elevation: 1,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.12)',
+  },
+  birthdayCard: {
+    backgroundColor: '#FFF8F0',
+    borderWidth: 3,
+    borderColor: '#FF8C42',
+    marginBottom: 32,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  birthdayHeader: {
+    marginBottom: 12,
+  },
+  birthdayLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FF6B35',
+    letterSpacing: 1.5,
+  },
+  birthdayEmoji: {
+    fontSize: 56,
+    marginRight: 20,
+  },
+  birthdayTitle: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#2C1810',
+    letterSpacing: -0.5,
   },
   header: {
     flexDirection: 'row',
