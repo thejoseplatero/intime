@@ -7,19 +7,30 @@ const ONBOARDING_KEY = '@intime:hasCompletedOnboarding';
 export const storage = {
   async saveMilestones(milestones: Milestone[]): Promise<void> {
     try {
+      // Validate milestones array
+      if (!Array.isArray(milestones)) {
+        console.error('saveMilestones: not an array', milestones);
+        return;
+      }
       await AsyncStorage.setItem(MILESTONES_KEY, JSON.stringify(milestones));
     } catch (error) {
-      // Silently handle error - data is optional and shouldn't crash the app
-      throw error;
+      console.error('Error saving milestones:', error);
     }
   },
 
   async loadMilestones(): Promise<Milestone[]> {
     try {
       const data = await AsyncStorage.getItem(MILESTONES_KEY);
-      return data ? JSON.parse(data) : [];
+      if (!data) return [];
+      
+      const parsed = JSON.parse(data);
+      // Validate that parsed data is an array
+      if (!Array.isArray(parsed)) return [];
+      
+      return parsed;
     } catch (error) {
-      // Silently handle error - return empty array on failure
+      // Log error for debugging
+      console.error('Error loading milestones:', error);
       return [];
     }
   },

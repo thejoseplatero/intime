@@ -5,9 +5,9 @@ import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { DashboardScreen } from './src/screens/DashboardScreen';
 import { AddMilestoneScreen } from './src/screens/AddMilestoneScreen';
 
-// Disable LogBox to skip PNG errors
+// Disable LogBox warnings but keep console logs for debugging
 import { LogBox } from 'react-native';
-LogBox.ignoreAllLogs();
+LogBox.ignoreAllLogs(true);
 
 // Simple navigation state
 type Screen = 'loading' | 'onboarding' | 'dashboard' | 'add';

@@ -22,14 +22,27 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
   const [refreshing, setRefreshing] = useState(false);
 
   const loadMilestones = async () => {
-    await storage.createBirthdayMilestoneIfNeeded();
-    const data = await storage.loadMilestones();
-    const sorted = data.sort((a, b) => {
-      const daysA = calculateDaysLeft(a.date);
-      const daysB = calculateDaysLeft(b.date);
-      return daysA - daysB;
-    });
-    setMilestones(sorted);
+    try {
+      await storage.createBirthdayMilestoneIfNeeded();
+      const data = await storage.loadMilestones();
+      
+      // Safety check: ensure data is an array
+      if (!Array.isArray(data)) {
+        console.error('loadMilestones: data is not an array', data);
+        setMilestones([]);
+        return;
+      }
+      
+      const sorted = data.sort((a, b) => {
+        const daysA = calculateDaysLeft(a.date);
+        const daysB = calculateDaysLeft(b.date);
+        return daysA - daysB;
+      });
+      setMilestones(sorted);
+    } catch (error) {
+      console.error('Error in loadMilestones:', error);
+      setMilestones([]);
+    }
   };
 
   useEffect(() => {
