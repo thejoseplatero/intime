@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Milestone } from '../types';
 import { LiveCountdown } from '../components/LiveCountdown';
+import { storage } from '../utils/storage';
 
 interface MilestoneCardProps {
   milestone: Milestone;
@@ -16,6 +17,27 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
 }) => {
   const isBirthday = milestone.id === 'birthday-milestone';
   const [expanded, setExpanded] = useState(false);
+  const [nextAge, setNextAge] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (isBirthday) {
+      loadAge();
+    }
+  }, [isBirthday]);
+
+  const loadAge = async () => {
+    const birthday = await storage.getBirthday();
+    if (birthday) {
+      const today = new Date();
+      const birth = new Date(birthday);
+      let age = today.getFullYear() - birth.getFullYear();
+      const monthDiff = today.getMonth() - birth.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+      }
+      setNextAge(age + 1);
+    }
+  };
 
   const handleDelete = () => {
     Alert.alert(
@@ -36,16 +58,15 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
             <Text style={styles.menuIcon}>⋮</Text>
           </TouchableOpacity>
           
-          <View style={styles.birthdayHeader}>
-            <Text style={styles.birthdayEmoji}>{milestone.emoji}</Text>
-            <View style={styles.birthdayTitleContainer}>
-              <Text style={styles.birthdayTitle}>{milestone.title}</Text>
-            </View>
-          </View>
-
           <View style={styles.birthdayCountdown}>
             <LiveCountdown targetDate={milestone.date} showFullDetails={true} />
           </View>
+          
+          {nextAge && (
+            <Text style={styles.birthdaySubtitle}>
+              until you turn {nextAge}
+            </Text>
+          )}
         </View>
       ) : (
         <TouchableOpacity
@@ -152,7 +173,15 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   birthdayCountdown: {
-    marginTop: 8,
+    marginTop: 32,
+    alignItems: 'center',
+  },
+  birthdaySubtitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 16,
   },
   header: {
     flexDirection: 'row',

@@ -92,10 +92,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>⏱ InTime</Text>
-        <Text style={styles.headerSubtitle}>
-          Every moment is precious. Use it wisely.
-        </Text>
+        <Text style={styles.headerTitle}>InTime</Text>
       </View>
 
       {milestones.length === 0 ? (
@@ -153,16 +150,11 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   headerTitle: {
-    fontSize: 36,
-    fontWeight: '300',
-    color: '#2C2C2C',
-    letterSpacing: -0.5,
-    marginBottom: 8,
-  },
-  headerSubtitle: {
-    fontSize: 15,
-    color: '#9E9E9E',
+    fontSize: 24,
     fontWeight: '400',
+    color: '#2C2C2C',
+    letterSpacing: 2,
+    textTransform: 'uppercase',
   },
   list: {
     padding: 20,
