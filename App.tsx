@@ -64,7 +64,10 @@ function App() {
         setCurrentScreen('dashboard');
       }
     },
-    addListener: () => ({}),
+    addListener: (event: string, callback: () => void) => {
+      // Return a no-op unsubscribe function
+      return () => {};
+    },
   }), []);
 
   if (isLoading) {

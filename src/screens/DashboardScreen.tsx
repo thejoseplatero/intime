@@ -37,7 +37,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
     const unsubscribe = navigation.addListener('focus', () => {
       loadMilestones();
     });
-    return unsubscribe;
+    return () => {
+      if (typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    };
   }, [navigation]);
 
   const handleRefresh = async () => {
