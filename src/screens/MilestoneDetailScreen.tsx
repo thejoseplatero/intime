@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Milestone } from '../types';
 import { storage } from '../utils/storage';
 import { LiveCountdown } from '../components/LiveCountdown';
-import { calculateDaysLeft, getDaysLeftText, getCategoryColor } from '../utils/dateHelpers';
+import { calculateDaysLeft } from '../utils/dateHelpers';
 
 interface MilestoneDetailScreenProps {
   navigation: any;
@@ -83,7 +83,6 @@ export const MilestoneDetailScreen: React.FC<MilestoneDetailScreenProps> = ({
   }
 
   const daysLeft = calculateDaysLeft(milestone.date);
-  const colors = getCategoryColor(milestone.category);
 
   // Encouraging, honest microcopy inspired by Wise
   const getMotivationalText = (days: number) => {
@@ -98,7 +97,7 @@ export const MilestoneDetailScreen: React.FC<MilestoneDetailScreenProps> = ({
   const motivation = getMotivationalText(daysLeft);
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.secondary }]}>
+    <ScrollView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -144,18 +143,6 @@ export const MilestoneDetailScreen: React.FC<MilestoneDetailScreenProps> = ({
 
           <Text style={styles.motivationalTitle}>{motivation.main}</Text>
           <Text style={styles.motivationalSub}>{motivation.sub}</Text>
-
-          {milestone.category && (
-            <View style={styles.categoryBadge}>
-              <Text style={styles.categoryText}>{milestone.category}</Text>
-            </View>
-          )}
-
-          {milestone.note && (
-            <View style={styles.noteContainer}>
-              <Text style={styles.noteText}>{milestone.note}</Text>
-            </View>
-          )}
 
           <TouchableOpacity
             style={styles.deleteButton}
@@ -277,30 +264,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 32,
     fontStyle: 'italic',
-  },
-  categoryBadge: {
-    backgroundColor: '#6C7CE7',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginBottom: 24,
-  },
-  categoryText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  noteContainer: {
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    padding: 20,
-    width: '100%',
-    marginBottom: 24,
-  },
-  noteText: {
-    fontSize: 16,
-    color: '#1a1a1a',
-    lineHeight: 24,
   },
   deleteButton: {
     backgroundColor: '#ff6b6b',

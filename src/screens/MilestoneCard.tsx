@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Milestone } from '../types';
-import { calculateDaysLeft, getCategoryColor } from '../utils/dateHelpers';
+import { getCategoryColor } from '../utils/dateHelpers';
 import { LiveCountdown } from '../components/LiveCountdown';
 import { storage } from '../utils/storage';
 
@@ -14,9 +14,7 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
   milestone,
   onPress,
 }) => {
-  const daysLeft = calculateDaysLeft(milestone.date);
   const colors = getCategoryColor(milestone.category);
-  const progress = Math.max(0, Math.min(1, 1 - daysLeft / 365));
   const isBirthday = milestone.id === 'birthday-milestone';
   const [nextAge, setNextAge] = useState<number | null>(null);
 
@@ -59,13 +57,6 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
             <Text style={styles.title}>{milestone.title}</Text>
           )}
           <LiveCountdown targetDate={milestone.date} showFullDetails={false} />
-        </View>
-        <View style={styles.rightSection}>
-          <View style={[styles.circle, { borderColor: colors.primary }]}>
-            <Text style={[styles.progressText, { color: colors.primary }]}>
-              {Math.round(progress * 100)}%
-            </Text>
-          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -112,20 +103,5 @@ const styles = StyleSheet.create({
     color: '#2C2C2C',
     marginBottom: 6,
     letterSpacing: -0.2,
-  },
-  rightSection: {
-    marginLeft: 16,
-  },
-  circle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    borderWidth: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  progressText: {
-    fontSize: 11,
-    fontWeight: '600',
   },
 });

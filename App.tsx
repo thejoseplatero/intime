@@ -11,7 +11,7 @@ import { LogBox } from 'react-native';
 LogBox.ignoreAllLogs();
 
 // Simple navigation state
-type Screen = 'loading' | 'onboarding' | 'dashboard' | 'detail' | 'add' | 'settings';
+type Screen = 'loading' | 'onboarding' | 'dashboard' | 'detail' | 'add';
 type MilestoneId = string;
 
 function App() {
@@ -58,8 +58,6 @@ function App() {
         setSelectedMilestoneId(params?.milestoneId);
       } else if (screen === 'AddMilestone') {
         setCurrentScreen('add');
-      } else if (screen === 'Settings') {
-        setCurrentScreen('settings');
       } else if (screen === 'Dashboard') {
         setCurrentScreen('dashboard');
       }
