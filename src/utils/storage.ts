@@ -9,7 +9,7 @@ export const storage = {
     try {
       await AsyncStorage.setItem(MILESTONES_KEY, JSON.stringify(milestones));
     } catch (error) {
-      console.error('Error saving milestones:', error);
+      // Silently handle error - data is optional and shouldn't crash the app
       throw error;
     }
   },
@@ -19,7 +19,7 @@ export const storage = {
       const data = await AsyncStorage.getItem(MILESTONES_KEY);
       return data ? JSON.parse(data) : [];
     } catch (error) {
-      console.error('Error loading milestones:', error);
+      // Silently handle error - return empty array on failure
       return [];
     }
   },
@@ -37,7 +37,7 @@ export const storage = {
     try {
       await AsyncStorage.setItem(ONBOARDING_KEY, 'true');
     } catch (error) {
-      console.error('Error setting onboarding status:', error);
+      // Silently handle error
     }
   },
 
@@ -54,7 +54,7 @@ export const storage = {
     try {
       await AsyncStorage.setItem('@intime:birthday', birthday);
     } catch (error) {
-      console.error('Error saving birthday:', error);
+      // Silently handle error
     }
   },
 
@@ -90,7 +90,7 @@ export const storage = {
         await this.saveMilestones(milestones);
       }
     } catch (error) {
-      console.error('Error creating birthday milestone:', error);
+      // Silently handle error - birthday milestone is optional
     }
   },
 };
