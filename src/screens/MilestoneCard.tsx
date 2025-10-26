@@ -86,36 +86,45 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
   };
 
   // Animated styles
-  const cardAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    opacity: opacity.value,
-    marginTop: interpolate(
-      opacity.value,
-      [0, 1],
-      [-20, 0],
-      Extrapolation.CLAMP
-    ),
-  }));
+  const cardAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ scale: scale.value }],
+      opacity: opacity.value,
+      marginTop: interpolate(
+        opacity.value,
+        [0, 1],
+        [-20, 0],
+        Extrapolation.CLAMP
+      ),
+    };
+  });
 
-  const chevronAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotation.value}deg` }],
-  }));
+  const chevronAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      transform: [{ rotate: `${rotation.value}deg` }],
+    };
+  });
 
-  const contentAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: progress.value,
-    height: interpolate(
-      progress.value,
-      [0, 1],
-      [0, 400],
-      Extrapolation.CLAMP
-    ),
-    marginTop: interpolate(
-      progress.value,
-      [0, 1],
-      [0, 16],
-      Extrapolation.CLAMP
-    ),
-  }));
+  const contentAnimatedStyle = useAnimatedStyle(() => {
+    'worklet';
+    return {
+      opacity: progress.value,
+      height: interpolate(
+        progress.value,
+        [0, 1],
+        [0, 400],
+        Extrapolation.CLAMP
+      ),
+      marginTop: interpolate(
+        progress.value,
+        [0, 1],
+        [0, 16],
+        Extrapolation.CLAMP
+      ),
+    };
+  });
 
   return (
     <Animated.View style={cardAnimatedStyle}>
