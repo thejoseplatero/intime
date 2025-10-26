@@ -50,10 +50,22 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
     setRefreshing(false);
   };
 
+  const handleMilestoneEdit = (milestone: Milestone) => {
+    navigation.navigate('AddMilestone', { milestone });
+  };
+
+  const handleMilestoneDelete = async (milestone: Milestone) => {
+    const allMilestones = await storage.loadMilestones();
+    const updated = allMilestones.filter((m) => m.id !== milestone.id);
+    await storage.saveMilestones(updated);
+    loadMilestones();
+  };
+
   const renderMilestone = ({ item }: { item: Milestone }) => (
     <MilestoneCard
       milestone={item}
-      onPress={() => navigation.navigate('MilestoneDetail', { milestoneId: item.id })}
+      onEdit={() => handleMilestoneEdit(item)}
+      onDelete={() => handleMilestoneDelete(item)}
     />
   );
 

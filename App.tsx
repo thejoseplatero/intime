@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import { storage } from './src/utils/storage';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { DashboardScreen } from './src/screens/DashboardScreen';
-import { MilestoneDetailScreen } from './src/screens/MilestoneDetailScreen';
 import { AddMilestoneScreen } from './src/screens/AddMilestoneScreen';
 
 // Disable LogBox to skip PNG errors
@@ -11,14 +10,12 @@ import { LogBox } from 'react-native';
 LogBox.ignoreAllLogs();
 
 // Simple navigation state
-type Screen = 'loading' | 'onboarding' | 'dashboard' | 'detail' | 'add';
-type MilestoneId = string;
+type Screen = 'loading' | 'onboarding' | 'dashboard' | 'add';
 
 function App() {
   const [hasCompletedOnboarding, setHasCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [currentScreen, setCurrentScreen] = useState<Screen>('loading');
-  const [selectedMilestoneId, setSelectedMilestoneId] = useState<MilestoneId | null>(null);
   const [milestones, setMilestones] = useState<any[]>([]);
 
   useEffect(() => {
@@ -53,10 +50,7 @@ function App() {
   // Navigation helpers
   const navigation = React.useMemo(() => ({
     navigate: (screen: string, params?: any) => {
-      if (screen === 'MilestoneDetail') {
-        setCurrentScreen('detail');
-        setSelectedMilestoneId(params?.milestoneId);
-      } else if (screen === 'AddMilestone') {
+      if (screen === 'AddMilestone') {
         setCurrentScreen('add');
       } else if (screen === 'Dashboard') {
         setCurrentScreen('dashboard');
@@ -93,18 +87,6 @@ function App() {
       <>
         <StatusBar barStyle="dark-content" />
         <DashboardScreen navigation={navigation} />
-      </>
-    );
-  }
-
-  if (currentScreen === 'detail' && selectedMilestoneId) {
-    return (
-      <>
-        <StatusBar barStyle="dark-content" />
-        <MilestoneDetailScreen 
-          navigation={navigation} 
-          route={{ params: { milestoneId: selectedMilestoneId } }}
-        />
       </>
     );
   }
