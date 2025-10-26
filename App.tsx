@@ -29,6 +29,7 @@ function App() {
     if (hasCompletedOnboarding && currentScreen === 'dashboard') {
       loadMilestones();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentScreen, hasCompletedOnboarding]);
 
   const checkOnboardingStatus = async () => {

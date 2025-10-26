@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Milestone } from '../types';
 import { calculateDaysLeft, getCategoryColor } from '../utils/dateHelpers';
-import { ProgressRing } from '../components/ProgressRing';
 import { LiveCountdown } from '../components/LiveCountdown';
 import { storage } from '../utils/storage';
 
@@ -62,12 +61,11 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
           <LiveCountdown targetDate={milestone.date} showFullDetails={false} />
         </View>
         <View style={styles.rightSection}>
-          <ProgressRing
-            progress={progress}
-            size={48}
-            strokeWidth={4}
-            color={colors.primary}
-          />
+          <View style={[styles.circle, { borderColor: colors.primary }]}>
+            <Text style={[styles.progressText, { color: colors.primary }]}>
+              {Math.round(progress * 100)}%
+            </Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -117,5 +115,17 @@ const styles = StyleSheet.create({
   },
   rightSection: {
     marginLeft: 16,
+  },
+  circle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  progressText: {
+    fontSize: 11,
+    fontWeight: '600',
   },
 });
