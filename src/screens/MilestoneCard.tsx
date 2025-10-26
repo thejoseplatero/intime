@@ -88,7 +88,6 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
 
   // Animated styles
   const cardAnimatedStyle = useAnimatedStyle(() => {
-    'worklet';
     return {
       transform: [{ scale: scale.value }],
       opacity: opacity.value,
@@ -102,14 +101,12 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
   });
 
   const chevronAnimatedStyle = useAnimatedStyle(() => {
-    'worklet';
     return {
       transform: [{ rotate: `${rotation.value}deg` }],
     };
   });
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
-    'worklet';
     return {
       opacity: progress.value,
       height: interpolate(
