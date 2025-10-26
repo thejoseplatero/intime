@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import Animated, { 
+  useSharedValue, 
+  useAnimatedStyle, 
+  withSpring, 
+  withTiming, 
+  interpolate,
+  Extrapolation 
+} from 'react-native-reanimated';
 import { Milestone } from '../types';
 import { LiveCountdown } from '../components/LiveCountdown';
 import { storage } from '../utils/storage';
+import { theme } from '../constants/theme';
 
 interface MilestoneCardProps {
   milestone: Milestone;
@@ -20,11 +29,28 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
   const [nextAge, setNextAge] = useState<number | null>(null);
   const [currentAge, setCurrentAge] = useState<number>(0);
 
+  // Animation values
+  const scale = useSharedValue(1);
+  const rotation = useSharedValue(0);
+  const progress = useSharedValue(0);
+  const opacity = useSharedValue(0);
+
   useEffect(() => {
     if (isBirthday) {
       loadAge();
     }
+    // Stagger entry animation
+    opacity.value = withTiming(1, { duration: 600 });
   }, [isBirthday]);
+
+  useEffect(() => {
+    // Animate expand/collapse with spring physics
+    progress.value = withSpring(expanded ? 1 : 0, {
+      damping: 20,
+      stiffness: 120,
+    });
+    rotation.value = withTiming(expanded ? 180 : 0, { duration: 300 });
+  }, [expanded]);
 
   const loadAge = async () => {
     const birthday = await storage.getBirthday();
@@ -52,30 +78,74 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
     );
   };
 
+  const handlePress = () => {
+    // Magnetic pulse animation
+    scale.value = withSpring(0.97, { damping: 15 }, () => {
+      scale.value = withSpring(1);
+    });
+    setExpanded(!expanded);
+  };
+
+  // Animated styles
+  const cardAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+    marginTop: interpolate(
+      opacity.value,
+      [0, 1],
+      [-20, 0],
+      Extrapolation.CLAMP
+    ),
+  }));
+
+  const chevronAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value}deg` }],
+  }));
+
+  const contentAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: progress.value,
+    height: interpolate(
+      progress.value,
+      [0, 1],
+      [0, 400],
+      Extrapolation.CLAMP
+    ),
+    marginTop: interpolate(
+      progress.value,
+      [0, 1],
+      [0, theme.spacing.md],
+      Extrapolation.CLAMP
+    ),
+  }));
+
   return (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => setExpanded(!expanded)}
-      activeOpacity={0.95}
-    >
-      <View style={styles.header}>
-        <Text style={styles.emoji}>{milestone.emoji}</Text>
-        <View style={styles.titleContainer}>
-          {isBirthday && nextAge ? (
-            <Text style={styles.title}>You will be {nextAge} in</Text>
-          ) : (
-            <Text style={styles.title}>{milestone.title}</Text>
-          )}
+    <Animated.View style={cardAnimatedStyle}>
+      <TouchableOpacity
+        style={styles.card}
+        onPress={handlePress}
+        activeOpacity={0.95}
+      >
+        <View style={styles.header}>
+          <Text style={styles.emoji}>{milestone.emoji}</Text>
+          <View style={styles.titleContainer}>
+            {isBirthday && nextAge ? (
+              <Text style={styles.title}>You will be {nextAge} in</Text>
+            ) : (
+              <Text style={styles.title}>{milestone.title}</Text>
+            )}
+          </View>
+          <Animated.View style={chevronAnimatedStyle}>
+            <Text style={styles.chevron}>▼</Text>
+          </Animated.View>
         </View>
-        <Text style={styles.chevron}>{expanded ? '▼' : '▶'}</Text>
-      </View>
 
       <View style={styles.countdownPreview}>
         <LiveCountdown targetDate={milestone.date} showFullDetails={false} />
       </View>
 
-      {expanded && (
-        <View style={styles.expandedContent}>
+      <Animated.View style={contentAnimatedStyle}>
+        {progress.value > 0 && (
+          <View style={styles.expandedContent}>
           {isBirthday && currentAge > 0 ? (
             <View style={styles.birthdayInfo}>
               <Text style={styles.birthdayText}>You are {currentAge} years old now</Text>
@@ -106,24 +176,22 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
             </TouchableOpacity>
           </View>
         </View>
-      )}
-    </TouchableOpacity>
+        )}
+      </Animated.View>
+ audio </TouchableOpacity>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 16,
-    backgroundColor: '#ffffff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 12,
-    elevation: 2,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing.lg,
+    marginBottom: theme.spacing.md,
+    backgroundColor: theme.colors.backgroundElevated,
+    ...theme.shadows.md,
     borderWidth: 0.5,
-    borderColor: 'rgba(0,0,0,0.02)',
+    borderColor: theme.colors.borderLight,
   },
   header: {
     flexDirection: 'row',
