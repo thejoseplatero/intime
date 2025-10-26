@@ -92,7 +92,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Your Lifeline</Text>
+        <Text style={styles.headerTitle}>⏱ InTime</Text>
         <Text style={styles.headerSubtitle}>
           Every moment is precious. Use it wisely.
         </Text>

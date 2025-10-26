@@ -30,48 +30,62 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
 
   return (
     <View style={[styles.card, isBirthday && styles.birthdayCard]}>
-      <TouchableOpacity
-        onPress={() => setExpanded(!expanded)}
-        activeOpacity={0.9}
-      >
-        {isBirthday && (
+      {isBirthday ? (
+        <View style={styles.birthdayContent}>
+          <TouchableOpacity style={styles.editMenuButton} onPress={onEdit}>
+            <Text style={styles.menuIcon}>⋮</Text>
+          </TouchableOpacity>
+          
           <View style={styles.birthdayHeader}>
-            <Text style={styles.birthdayLabel}>YOUR LIFELINE</Text>
-          </View>
-        )}
-        <View style={styles.header}>
-          <Text style={[styles.emoji, isBirthday && styles.birthdayEmoji]}>{milestone.emoji}</Text>
-          <Text style={[styles.title, isBirthday && styles.birthdayTitle]}>{milestone.title}</Text>
-          {!isBirthday && <Text style={styles.chevron}>{expanded ? '▲' : '▼'}</Text>}
-        </View>
-
-        <View style={styles.countdownPreview}>
-          <LiveCountdown targetDate={milestone.date} showFullDetails={false} />
-        </View>
-
-        {expanded && (
-          <View style={styles.expandedContent}>
-            <View style={styles.countdownContainer}>
-              <LiveCountdown targetDate={milestone.date} showFullDetails={true} />
-            </View>
-
-            <View style={styles.actions}>
-              <TouchableOpacity 
-                style={styles.editButton}
-                onPress={onEdit}
-              >
-                <Text style={styles.editButtonText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={styles.deleteButton}
-                onPress={handleDelete}
-              >
-                <Text style={styles.deleteButtonText}>Delete</Text>
-              </TouchableOpacity>
+            <Text style={styles.birthdayEmoji}>{milestone.emoji}</Text>
+            <View style={styles.birthdayTitleContainer}>
+              <Text style={styles.birthdayTitle}>{milestone.title}</Text>
             </View>
           </View>
-        )}
-      </TouchableOpacity>
+
+          <View style={styles.birthdayCountdown}>
+            <LiveCountdown targetDate={milestone.date} showFullDetails={true} />
+          </View>
+        </View>
+      ) : (
+        <TouchableOpacity
+          onPress={() => setExpanded(!expanded)}
+          activeOpacity={0.9}
+        >
+          <View style={styles.header}>
+            <Text style={styles.emoji}>{milestone.emoji}</Text>
+            <Text style={styles.title}>{milestone.title}</Text>
+            <Text style={styles.chevron}>{expanded ? '▲' : '▼'}</Text>
+          </View>
+
+          <View style={styles.countdownPreview}>
+            <LiveCountdown targetDate={milestone.date} showFullDetails={false} />
+          </View>
+
+          {expanded && (
+            <View style={styles.expandedContent}>
+              <View style={styles.countdownContainer}>
+                <LiveCountdown targetDate={milestone.date} showFullDetails={true} />
+              </View>
+
+              <View style={styles.actions}>
+                <TouchableOpacity 
+                  style={styles.editButton}
+                  onPress={onEdit}
+                >
+                  <Text style={styles.editButtonText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.deleteButton}
+                  onPress={handleDelete}
+                >
+                  <Text style={styles.deleteButtonText}>Delete</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -100,24 +114,45 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 4,
   },
-  birthdayHeader: {
-    marginBottom: 12,
-  },
-  birthdayLabel: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#FF6B35',
-    letterSpacing: 1.5,
-  },
   birthdayEmoji: {
     fontSize: 56,
     marginRight: 20,
   },
   birthdayTitle: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: '800',
     color: '#2C1810',
     letterSpacing: -0.5,
+  },
+  birthdayTitleContainer: {
+    flex: 1,
+  },
+  birthdayContent: {
+    position: 'relative',
+  },
+  editMenuButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 32,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  menuIcon: {
+    fontSize: 20,
+    color: '#666',
+    fontWeight: '700',
+  },
+  birthdayHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingTop: 8,
+  },
+  birthdayCountdown: {
+    marginTop: 8,
   },
   header: {
     flexDirection: 'row',
