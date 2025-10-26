@@ -11,6 +11,7 @@ import Animated, {
 import { Milestone } from '../types';
 import { LiveCountdown } from '../components/LiveCountdown';
 import { storage } from '../utils/storage';
+import { tokens, shadows } from '../theme/tokens';
 
 interface MilestoneCardProps {
   milestone: Milestone;
@@ -39,7 +40,7 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
       loadAge();
     }
     // Stagger entry animation
-    opacity.value = withTiming(1, { duration: 600 });
+    opacity.value = withTiming(1, { duration: tokens.motion.slow });
   }, [isBirthday, opacity]);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
       damping: 20,
       stiffness: 120,
     });
-    rotation.value = withTiming(expanded ? 180 : 0, { duration: 300 });
+    rotation.value = withTiming(expanded ? 180 : 0, { duration: tokens.motion.base });
   }, [expanded, progress, rotation]);
 
   const loadAge = async () => {
@@ -193,88 +194,88 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 16,
-    backgroundColor: '#ffffff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
-    borderWidth: 0.5,
-    borderColor: 'rgba(0,0,0,0.02)',
+    borderRadius: tokens.radius.lg,
+    padding: tokens.space['20'],
+    marginBottom: tokens.space['16'],
+    backgroundColor: tokens.color.bg.elevated,
+    ...shadows.elev1,
+    borderWidth: 1,
+    borderColor: tokens.color.line.soft,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: tokens.space['8'],
   },
   emoji: {
     fontSize: 32,
-    marginRight: 12,
+    marginRight: tokens.space['12'],
   },
   titleContainer: {
     flex: 1,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#2C2C2C',
+    ...tokens.type.h3,
+    color: tokens.color.fg.primary,
   },
   chevron: {
-    fontSize: 14,
-    color: '#9E9E9E',
-    marginLeft: 8,
+    fontSize: 12,
+    color: tokens.color.fg.tertiary,
+    marginLeft: tokens.space['8'],
   },
   countdownPreview: {
-    marginTop: 8,
+    marginTop: tokens.space['8'],
   },
   expandedContent: {
-    marginTop: 16,
-    paddingTop: 16,
+    marginTop: tokens.space['16'],
+    paddingTop: tokens.space['16'],
     borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
+    borderTopColor: tokens.color.line.soft,
   },
   birthdayInfo: {
-    marginBottom: 16,
+    marginBottom: tokens.space['16'],
     alignItems: 'center',
   },
   birthdayText: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 4,
+    ...tokens.type.body,
+    color: tokens.color.fg.secondary,
+    marginBottom: tokens.space['4'],
   },
   countdownContainer: {
-    marginVertical: 16,
+    marginVertical: tokens.space['16'],
   },
   actions: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 16,
+    marginTop: tokens.space['16'],
+    gap: tokens.space['8'],
   },
   editButton: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 20,
-    backgroundColor: '#6C7CE7',
-    marginRight: 8,
+    paddingVertical: tokens.space['12'],
+    borderRadius: tokens.radius.xl,
+    backgroundColor: tokens.color.brand['600'],
     alignItems: 'center',
+    ...shadows.elev1,
   },
   editButtonText: {
-    color: '#ffffff',
+    ...tokens.type.caption,
+    color: tokens.color.bg.default,
     fontWeight: '600',
+    letterSpacing: 0.3,
   },
   deleteButton: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 20,
-    backgroundColor: '#ff6b6b',
-    marginLeft: 8,
+    paddingVertical: tokens.space['12'],
+    borderRadius: tokens.radius.xl,
+    backgroundColor: tokens.color.state.danger,
     alignItems: 'center',
+    ...shadows.elev1,
   },
   deleteButtonText: {
-    color: '#ffffff',
+    ...tokens.type.caption,
+    color: tokens.color.bg.default,
     fontWeight: '600',
+    letterSpacing: 0.3,
   },
 });
