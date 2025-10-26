@@ -40,7 +40,7 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
     }
     // Stagger entry animation
     opacity.value = withTiming(1, { duration: 600 });
-  }, [isBirthday]);
+  }, [isBirthday, opacity]);
 
   useEffect(() => {
     // Animate expand/collapse with spring physics
@@ -49,7 +49,7 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
       stiffness: 120,
     });
     rotation.value = withTiming(expanded ? 180 : 0, { duration: 300 });
-  }, [expanded]);
+  }, [expanded, progress, rotation]);
 
   const loadAge = async () => {
     const birthday = await storage.getBirthday();
