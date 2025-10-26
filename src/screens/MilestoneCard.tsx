@@ -178,25 +178,30 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
         </View>
         )}
       </Animated.View>
- audio </TouchableOpacity>
+      </TouchableOpacity>
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: theme.borderRadius.xl,
-    padding: theme.spacing.lg,
-    marginBottom: theme.spacing.md,
-    backgroundColor: theme.colors.backgroundElevated,
-    ...theme.shadows.md,
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 16,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
     borderWidth: 0.5,
-    borderColor: theme.colors.borderLight,
+    borderColor: 'rgba(0,0,0,0.02)',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
+  },
   },
   emoji: {
     fontSize: 32,
