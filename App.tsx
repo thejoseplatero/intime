@@ -64,6 +64,9 @@ function App() {
         setCurrentScreen('dashboard');
       }
     },
+    goBack: () => {
+      setCurrentScreen('dashboard');
+    },
     addListener: (event: string, callback: () => void) => {
       // Return a no-op unsubscribe function
       return () => {};
