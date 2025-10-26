@@ -11,7 +11,6 @@ import Animated, {
 import { Milestone } from '../types';
 import { LiveCountdown } from '../components/LiveCountdown';
 import { storage } from '../utils/storage';
-import { theme } from '../constants/theme';
 
 interface MilestoneCardProps {
   milestone: Milestone;
@@ -113,7 +112,7 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
     marginTop: interpolate(
       progress.value,
       [0, 1],
-      [0, theme.spacing.md],
+      [0, 16],
       Extrapolation.CLAMP
     ),
   }));
@@ -201,7 +200,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
-  },
   },
   emoji: {
     fontSize: 32,
