@@ -33,6 +33,10 @@ function App() {
     const completed = await storage.hasCompletedOnboarding();
     setHasCompleted(completed);
     setIsLoading(false);
+    // Set initial screen based on onboarding status
+    if (completed) {
+      setCurrentScreen('dashboard');
+    }
   };
 
   const handleOnboardingComplete = async () => {
