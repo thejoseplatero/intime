@@ -60,15 +60,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <Text style={styles.headerTitle}>InTime</Text>
-          <TouchableOpacity 
-            onPress={() => navigation.navigate('Settings')}
-            style={styles.settingsButton}
-          >
-            <Text style={styles.settingsIcon}>⚙️</Text>
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.headerTitle}>InTime</Text>
         <Text style={styles.headerSubtitle}>
           {milestones.length === 0
             ? 'No milestones yet'
@@ -130,24 +122,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
   },
-  headerTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
   headerTitle: {
     fontSize: 36,
     fontWeight: '300',
     color: '#2C2C2C',
     letterSpacing: -0.5,
-  },
-  settingsButton: {
-    padding: 8,
-  },
-  settingsIcon: {
-    fontSize: 28,
-    opacity: 0.6,
+    marginBottom: 8,
   },
   headerSubtitle: {
     fontSize: 15,
