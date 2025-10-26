@@ -1,17 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import Animated, { 
-  useSharedValue, 
-  useAnimatedStyle, 
-  withSpring, 
-  withTiming, 
-  interpolate,
-  Extrapolation 
-} from 'react-native-reanimated';
 import { Milestone } from '../types';
 import { LiveCountdown } from '../components/LiveCountdown';
-import { storage } from '../utils/storage';
-import { tokens, shadows } from '../theme/tokens';
 
 interface MilestoneCardProps {
   milestone: Milestone;
@@ -24,48 +14,7 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const isBirthday = milestone.id === 'birthday-milestone';
   const [expanded, setExpanded] = useState(false);
-  const [nextAge, setNextAge] = useState<number | null>(null);
-  const [currentAge, setCurrentAge] = useState<number>(0);
-
-  // Animation values
-  const scale = useSharedValue(1);
-  const rotation = useSharedValue(0);
-  const progress = useSharedValue(0);
-  const opacity = useSharedValue(0);
-
-  useEffect(() => {
-    if (isBirthday) {
-      loadAge();
-    }
-    // Stagger entry animation
-    opacity.value = withTiming(1, { duration: tokens.motion.slow });
-  }, [isBirthday, opacity]);
-
-  useEffect(() => {
-    // Animate expand/collapse with spring physics
-    progress.value = withSpring(expanded ? 1 : 0, {
-      damping: 20,
-      stiffness: 120,
-    });
-    rotation.value = withTiming(expanded ? 180 : 0, { duration: tokens.motion.base });
-  }, [expanded, progress, rotation]);
-
-  const loadAge = async () => {
-    const birthday = await storage.getBirthday();
-    if (birthday) {
-      const today = new Date();
-      const birth = new Date(birthday);
-      let age = today.getFullYear() - birth.getFullYear();
-      const monthDiff = today.getMonth() - birth.getMonth();
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age--;
-      }
-      setCurrentAge(age);
-      setNextAge(age + 1);
-    }
-  };
 
   const handleDelete = () => {
     Alert.alert(
@@ -78,201 +27,128 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
     );
   };
 
-  const handlePress = () => {
-    // Magnetic pulse animation
-    scale.value = withSpring(0.97, { damping: 15 }, () => {
-      scale.value = withSpring(1);
-    });
-    setExpanded(!expanded);
-  };
-
-  // Animated styles
-  const cardAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: scale.value }],
-      opacity: opacity.value,
-      marginTop: interpolate(
-        opacity.value,
-        [0, 1],
-        [-20, 0],
-        Extrapolation.CLAMP
-      ),
-    };
-  });
-
-  const chevronAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ rotate: `${rotation.value}deg` }],
-    };
-  });
-
-  const contentAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: progress.value,
-      height: interpolate(
-        progress.value,
-        [0, 1],
-        [0, 400],
-        Extrapolation.CLAMP
-      ),
-      marginTop: interpolate(
-        progress.value,
-        [0, 1],
-        [0, 16],
-        Extrapolation.CLAMP
-      ),
-    };
-  });
-
   return (
-    <Animated.View style={cardAnimatedStyle}>
+    <View style={styles.card}>
       <TouchableOpacity
-        style={styles.card}
-        onPress={handlePress}
-        activeOpacity={0.95}
+        onPress={() => setExpanded(!expanded)}
+        activeOpacity={0.9}
       >
         <View style={styles.header}>
           <Text style={styles.emoji}>{milestone.emoji}</Text>
-          <View style={styles.titleContainer}>
-            {isBirthday && nextAge ? (
-              <Text style={styles.title}>You will be {nextAge} in</Text>
-            ) : (
-              <Text style={styles.title}>{milestone.title}</Text>
-            )}
-          </View>
-          <Animated.View style={chevronAnimatedStyle}>
-            <Text style={styles.chevron}>▼</Text>
-          </Animated.View>
+          <Text style={styles.title}>{milestone.title}</Text>
+          <Text style={styles.chevron}>{expanded ? '▲' : '▼'}</Text>
         </View>
 
-      <View style={styles.countdownPreview}>
-        <LiveCountdown targetDate={milestone.date} showFullDetails={false} />
-      </View>
+        <View style={styles.countdownPreview}>
+          <LiveCountdown targetDate={milestone.date} showFullDetails={false} />
+        </View>
 
-      <Animated.View style={contentAnimatedStyle}>
-        {progress.value > 0 && (
+        {expanded && (
           <View style={styles.expandedContent}>
-          {isBirthday && currentAge > 0 ? (
-            <View style={styles.birthdayInfo}>
-              <Text style={styles.birthdayText}>You are {currentAge} years old now</Text>
-              <Text style={styles.birthdayText}>Turning {nextAge} on your next birthday</Text>
+            <View style={styles.countdownContainer}>
+              <LiveCountdown targetDate={milestone.date} showFullDetails={true} />
             </View>
-          ) : null}
-          
-          <View style={styles.countdownContainer}>
-            <LiveCountdown 
-              targetDate={milestone.date} 
-              showFullDetails={true}
-              isBirthday={false}
-            />
-          </View>
 
-          <View style={styles.actions}>
-            <TouchableOpacity 
-              style={styles.editButton}
-              onPress={onEdit}
-            >
-              <Text style={styles.editButtonText}>Edit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.deleteButton}
-              onPress={handleDelete}
-            >
-              <Text style={styles.deleteButtonText}>Delete</Text>
-            </TouchableOpacity>
+            <View style={styles.actions}>
+              <TouchableOpacity 
+                style={styles.editButton}
+                onPress={onEdit}
+              >
+                <Text style={styles.editButtonText}>Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.deleteButton}
+                onPress={handleDelete}
+              >
+                <Text style={styles.deleteButtonText}>Delete</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
         )}
-      </Animated.View>
       </TouchableOpacity>
-    </Animated.View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: tokens.radius.lg,
-    padding: tokens.space['20'],
-    marginBottom: tokens.space['16'],
-    backgroundColor: tokens.color.bg.elevated,
-    ...shadows.elev1,
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 1,
     borderWidth: 1,
-    borderColor: tokens.color.line.soft,
+    borderColor: 'rgba(0,0,0,0.12)',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: tokens.space['8'],
+    marginBottom: 8,
   },
   emoji: {
     fontSize: 32,
-    marginRight: tokens.space['12'],
-  },
-  titleContainer: {
-    flex: 1,
+    marginRight: 12,
   },
   title: {
-    ...tokens.type.h3,
-    color: tokens.color.fg.primary,
+    flex: 1,
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: '600',
+    color: '#0E1116',
   },
   chevron: {
     fontSize: 12,
-    color: tokens.color.fg.tertiary,
-    marginLeft: tokens.space['8'],
+    color: '#9E9E9E',
+    marginLeft: 8,
   },
   countdownPreview: {
-    marginTop: tokens.space['8'],
+    marginTop: 8,
   },
   expandedContent: {
-    marginTop: tokens.space['16'],
-    paddingTop: tokens.space['16'],
+    marginTop: 16,
+    paddingTop: 16,
     borderTopWidth: 1,
-    borderTopColor: tokens.color.line.soft,
-  },
-  birthdayInfo: {
-    marginBottom: tokens.space['16'],
-    alignItems: 'center',
-  },
-  birthdayText: {
-    ...tokens.type.body,
-    color: tokens.color.fg.secondary,
-    marginBottom: tokens.space['4'],
+    borderTopColor: 'rgba(0,0,0,0.12)',
   },
   countdownContainer: {
-    marginVertical: tokens.space['16'],
+    marginVertical: 16,
   },
   actions: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: tokens.space['16'],
-    gap: tokens.space['8'],
+    marginTop: 16,
+    gap: 8,
   },
   editButton: {
     flex: 1,
-    paddingVertical: tokens.space['12'],
-    borderRadius: tokens.radius.xl,
-    backgroundColor: tokens.color.brand['600'],
+    paddingVertical: 12,
+    borderRadius: 24,
+    backgroundColor: '#2563EB',
     alignItems: 'center',
-    ...shadows.elev1,
   },
   editButtonText: {
-    ...tokens.type.caption,
-    color: tokens.color.bg.default,
+    fontSize: 12,
+    lineHeight: 16,
     fontWeight: '600',
+    color: '#FFFFFF',
     letterSpacing: 0.3,
   },
   deleteButton: {
     flex: 1,
-    paddingVertical: tokens.space['12'],
-    borderRadius: tokens.radius.xl,
-    backgroundColor: tokens.color.state.danger,
+    paddingVertical: 12,
+    borderRadius: 24,
+    backgroundColor: '#DC2626',
     alignItems: 'center',
-    ...shadows.elev1,
   },
   deleteButtonText: {
-    ...tokens.type.caption,
-    color: tokens.color.bg.default,
+    fontSize: 12,
+    lineHeight: 16,
     fontWeight: '600',
+    color: '#FFFFFF',
     letterSpacing: 0.3,
   },
 });
