@@ -14,7 +14,7 @@ export const LiveCountdown: React.FC<LiveCountdownProps> = ({
   showFullDetails = true,
   isBirthday = false,
 }) => {
-  const [timeRemaining, setTimeRemaining] = useState<TimeRemaining>(
+  const [timeRemaining, setTimeRemaining] = useState<TimeRemaining>(() =>
     calculateTimeRemaining(targetDate)
   );
   const [age, setAge] = useState<number>(0);
@@ -39,13 +39,15 @@ export const LiveCountdown: React.FC<LiveCountdownProps> = ({
     updateAge();
     
     const interval = setInterval(() => {
-      setTimeRemaining(calculateTimeRemaining(targetDate));
+      const newTimeRemaining = calculateTimeRemaining(targetDate);
+      setTimeRemaining(newTimeRemaining);
     }, 1000);
 
     return () => clearInterval(interval);
   }, [targetDate, isBirthday]);
 
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
+  const { years, days, hours, minutes, seconds } = timeRemaining;
 
   if (showFullDetails) {
     return (
