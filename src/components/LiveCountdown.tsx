@@ -45,22 +45,7 @@ export const LiveCountdown: React.FC<LiveCountdownProps> = ({
     return () => clearInterval(interval);
   }, [targetDate, isBirthday]);
 
-  const { years, days, hours, minutes, seconds, total } = timeRemaining;
-  const isPast = total <= 0;
-
   const formatNumber = (num: number) => num.toString().padStart(2, '0');
-
-  // Celebration screen when milestone is reached - Duolingo-style delight!
-  if (isPast) {
-    return (
-      <View style={styles.celebrationContainer}>
-        <Text style={styles.celebrationEmojiRow}>🎉 🎊 ✨ 🎈 🎁</Text>
-        <Text style={styles.celebrationTitle}>You made it!</Text>
-        <Text style={styles.celebrationMessage}>This moment has arrived</Text>
-        <Text style={styles.celebrationSubMessage}>✨ Congratulations ✨</Text>
-      </View>
-    );
-  }
 
   if (showFullDetails) {
     return (
@@ -173,37 +158,6 @@ const styles = StyleSheet.create({
     color: '#666',
     fontWeight: '500',
     textTransform: 'uppercase',
-  },
-  celebrationContainer: {
-    alignItems: 'center',
-    padding: 20,
-  },
-  celebrationEmojiRow: {
-    fontSize: 52,
-    textAlign: 'center',
-    marginBottom: 24,
-    letterSpacing: 8,
-  },
-  celebrationTitle: {
-    fontSize: 44,
-    fontWeight: '800',
-    color: '#FF6B9D',
-    textAlign: 'center',
-    marginBottom: 12,
-    letterSpacing: -0.5,
-  },
-  celebrationMessage: {
-    fontSize: 22,
-    color: '#FF9F80',
-    textAlign: 'center',
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  celebrationSubMessage: {
-    fontSize: 18,
-    color: '#81C784',
-    textAlign: 'center',
-    fontWeight: '500',
   },
 });
 
