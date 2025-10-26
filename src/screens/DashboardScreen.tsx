@@ -92,9 +92,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <Text style={styles.headerTitle}>InTime</Text>
-        </View>
+        <Text style={styles.headerTitle}>InTime</Text>
       </View>
 
       {milestones.length === 0 ? (
@@ -143,7 +141,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 32,
     paddingBottom: 24,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F8F9FF',
     borderBottomWidth: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -152,23 +150,15 @@ const styles = StyleSheet.create({
     elevation: 1,
     alignItems: 'center',
   },
-  logoContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: '#F0F4FF',
-    borderRadius: 40,
-    shadowColor: '#6C7CE7',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
-  },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '800',
     color: '#6C7CE7',
-    letterSpacing: 3,
+    letterSpacing: 4,
     textTransform: 'uppercase',
+    textShadowColor: 'rgba(108, 124, 231, 0.5)',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 8,
   },
   list: {
     padding: 20,

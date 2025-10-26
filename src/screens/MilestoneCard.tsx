@@ -54,8 +54,8 @@ export const MilestoneCard: React.FC<MilestoneCardProps> = ({
     <View style={[styles.card, isBirthday && styles.birthdayCard]}>
       {isBirthday ? (
         <View style={styles.birthdayContent}>
-          <TouchableOpacity style={styles.editMenuButton} onPress={onEdit}>
-            <Text style={styles.menuIcon}>⋮</Text>
+          <TouchableOpacity style={styles.editMenuButton} onPress={onEdit} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <Text style={styles.menuIcon}>⚙</Text>
           </TouchableOpacity>
           
           <View style={styles.birthdayCountdown}>
@@ -153,18 +153,18 @@ const styles = StyleSheet.create({
   },
   editMenuButton: {
     position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 32,
-    height: 32,
+    top: 8,
+    right: 8,
+    width: 28,
+    height: 28,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 10,
+    opacity: 0.6,
   },
   menuIcon: {
-    fontSize: 20,
+    fontSize: 16,
     color: '#666',
-    fontWeight: '700',
   },
   birthdayHeader: {
     flexDirection: 'row',
@@ -177,11 +177,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   birthdaySubtitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#666',
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#FF6B35',
     textAlign: 'center',
-    marginTop: 16,
+    marginTop: 20,
+    letterSpacing: 0.8,
   },
   header: {
     flexDirection: 'row',
